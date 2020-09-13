@@ -14,25 +14,41 @@ class MoviesController < ApplicationController
   
   def index
     @all_ratings = Movie.all_ratings
-    @select_rating = params[:ratings]
     @sort = params[:sort]
     
-    if @select_rating
-      @rating_checked = @select_rating.keys
-    else
+    if params[:ratings]
+      @rating_checked = params[:ratings].keys
+      session[:ratings] = params[:ratings].keys
+    elsif session[:ratings] == nil
       @rating_checked = @all_ratings
+    else
+      @rating_checked = session[:ratings]
+      #session[:ratings].clear
     end
     
-    #@movies = Movie.with_ratings(@select_rating)
 
-    # @movies the lists shown in haml
-    if @sort
-      @movies = Movie.with_ratings(@select_rating).order(@sort)
-    # elsif @sort == 'release_date'
-    #   @movies = Movie.with_ratings(@select_rating).order(@sort)
-    else  
-      @movies = Movie.with_ratings(@select_rating)
+    if @sort 
+      session[:sort] = @sort
+      @movies = Movie.with_ratings(@rating_checked).order(@sort)
+      #flash[:notice] = "if redirect to new page #{@rating_checked} “  #{session[:sort]}"
+    
+    elsif session[:sort] == nil
+      @movies = Movie.all
+    
+    else
+      @movies = Movie.with_ratings(@rating_checked).order(session[:sort])
+      @sort = session[:sort]
+      #session[:sort].clear
+      #flash[:notice] = "elseif redirect to new page #{session[:sort]}"
+      #redirect_to movies_path
+    # else
+    #   @movies = Movie.with_ratings(@rating_checked).order(session[:sort])
+    #   flash[:notice] = "else redirect to new page #{session[:sort]}"
+    #   #redirect_to movies_path
+    #   # @movies = Movie.with_ratings(@rating_checked)
     end
+    
+    #session.clear
   end
 
   def new
