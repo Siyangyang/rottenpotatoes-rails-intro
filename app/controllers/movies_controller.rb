@@ -17,7 +17,7 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings
     
     #byebug
-    session[:rating] = session[:ratings] || {'G'=>'','PG-13'=>'','PG'=>'','R'=>''}
+    #session[:rating] = session[:ratings] || {'G'=>'1','PG-13'=>'1','PG'=>'1','R'=>'1'}
     
     
     if params[:ratings]
@@ -41,8 +41,12 @@ class MoviesController < ApplicationController
     
     session[:sort] = @sort
     session[:ratings] = @rating_checked
-    # byebug
-    @movies = Movie.with_ratings(@rating_checked.keys).order(session[:sort])
+    #byebug
+    if @rating_checked.keys
+      @movies = Movie.with_ratings(@rating_checked.keys).order(session[:sort])
+    else
+      @movies = Movie.with_ratings(@rating_checked).order(session[:sort])
+    end
     
     if(params[:sort]== nil && session[:sort] != nil) || (params[:ratings] == nil && session[:ratings] != nil)
       flash.keep
