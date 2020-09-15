@@ -15,17 +15,17 @@ class MoviesController < ApplicationController
   def index
     #byebug
     @all_ratings = Movie.all_ratings
-    
+    puts "all ratings #{@all_ratings}"
     #byebug
-    session[:rating] = session[:ratings] || {'G'=>'1','PG-13'=>'1','PG'=>'1','R'=>'1'}
+    #session[:rating] = session[:ratings] || {'G'=>'1','PG-13'=>'1','PG'=>'1','R'=>'1'}
     
     
     if params[:ratings]
-      @rating_checked = params[:ratings]
+      @rating_checked = params[:ratings].keys
     elsif session[:ratings]
       @rating_checked = session[:ratings]
     else
-      @rating_checked = {'G'=>'1','PG-13'=>'1','PG'=>'1','R'=>'1'}
+      @rating_checked = @all_ratings
     end
     
 
@@ -43,7 +43,7 @@ class MoviesController < ApplicationController
     session[:ratings] = @rating_checked
     #byebug
     
-    @movies = Movie.with_ratings(@rating_checked.keys).order(session[:sort])
+    @movies = Movie.with_ratings(@rating_checked).order(session[:sort])
   
     
     if(params[:sort]== nil && session[:sort] != nil) || (params[:ratings] == nil && session[:ratings] != nil)
