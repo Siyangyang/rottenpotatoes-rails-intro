@@ -17,7 +17,7 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings
     
     #byebug
-    #session[:rating] = session[:ratings] || {'G'=>'1','PG-13'=>'1','PG'=>'1','R'=>'1'}
+    session[:rating] = session[:ratings] || {'G'=>'1','PG-13'=>'1','PG'=>'1','R'=>'1'}
     
     
     if params[:ratings]
@@ -25,7 +25,7 @@ class MoviesController < ApplicationController
     elsif session[:ratings]
       @rating_checked = session[:ratings]
     else
-      @rating_checked = Movie.all_ratings
+      @rating_checked = {'G'=>'1','PG-13'=>'1','PG'=>'1','R'=>'1'}
     end
     
 
@@ -42,11 +42,9 @@ class MoviesController < ApplicationController
     session[:sort] = @sort
     session[:ratings] = @rating_checked
     #byebug
-    if @rating_checked.keys
-      @movies = Movie.with_ratings(@rating_checked.keys).order(session[:sort])
-    else
-      @movies = Movie.with_ratings(@rating_checked).order(session[:sort])
-    end
+    
+    @movies = Movie.with_ratings(@rating_checked.keys).order(session[:sort])
+  
     
     if(params[:sort]== nil && session[:sort] != nil) || (params[:ratings] == nil && session[:ratings] != nil)
       flash.keep
