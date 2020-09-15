@@ -9,13 +9,7 @@ class Movie < ActiveRecord::Base
     
     
     def self.with_ratings(ratings)
-        #nil case/none selected --> show every movies
-        # if ratings == nil
-        #     Movie.all
-        # #selected rating --> match with DB    
-        # else
-        #     Movie.all.where(rating: ratings)
-        # end
+
         Movie.all.where(rating: ratings)
     end 
 end

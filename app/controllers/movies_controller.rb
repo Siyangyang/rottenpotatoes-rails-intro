@@ -13,41 +13,41 @@ class MoviesController < ApplicationController
 
   
   def index
+    #byebug
     @all_ratings = Movie.all_ratings
-    @sort = params[:sort]
+    
+    #byebug
+    #session[:rating] = session[:ratings] || {'G'=>'','PG-13'=>'','PG'=>'','R'=>''}
+    
     
     if params[:ratings]
-      @rating_checked = params[:ratings].keys
-      session[:ratings] = params[:ratings].keys
-    elsif session[:ratings] == nil
-      @rating_checked = @all_ratings
-    else
+      @rating_checked = params[:ratings]
+    elsif session[:ratings]
       @rating_checked = session[:ratings]
-      #session[:ratings].clear
+    else
+      @rating_checked = Movie.all_ratings
     end
     
 
-    if @sort 
-      session[:sort] = @sort
-      @movies = Movie.with_ratings(@rating_checked).order(@sort)
-      #flash[:notice] = "if redirect to new page #{@rating_checked} “  #{session[:sort]}"
-    
-    elsif session[:sort] == nil
-      @movies = Movie.all
-    
-    else
-      @movies = Movie.with_ratings(@rating_checked).order(session[:sort])
+    if params[:sort]
+      @sort = params[:sort]
+      
+    elsif session[:sort]
       @sort = session[:sort]
-      #session[:sort].clear
-      #flash[:notice] = "elseif redirect to new page #{session[:sort]}"
-      #redirect_to movies_path
-    # else
-    #   @movies = Movie.with_ratings(@rating_checked).order(session[:sort])
-    #   flash[:notice] = "else redirect to new page #{session[:sort]}"
-    #   #redirect_to movies_path
-    #   # @movies = Movie.with_ratings(@rating_checked)
+
+    else
+      @movies = Movie.all
     end
     
+    session[:sort] = @sort
+    session[:ratings] = @rating_checked
+    # byebug
+    @movies = Movie.with_ratings(@rating_checked.keys).order(session[:sort])
+    
+    if(params[:sort]== nil && session[:sort] != nil) || (params[:ratings] == nil && session[:ratings] != nil)
+      flash.keep
+      redirect_to movies_path(:sort => session[:sort],:ratings => session[:ratings])
+    end
     #session.clear
   end
 
