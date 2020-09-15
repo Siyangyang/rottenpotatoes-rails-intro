@@ -1,0 +1,2 @@
+https://mysterious-oasis-69869.herokuapp.com/
+https://github.com/Siyangyang/rottenpotatoes-rails-intro
