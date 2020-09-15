@@ -17,7 +17,7 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings
     
     #byebug
-    #session[:rating] = session[:ratings] || {'G'=>'','PG-13'=>'','PG'=>'','R'=>''}
+    session[:rating] = session[:ratings] || {'G'=>'','PG-13'=>'','PG'=>'','R'=>''}
     
     
     if params[:ratings]
