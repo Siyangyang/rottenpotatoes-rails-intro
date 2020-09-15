@@ -19,7 +19,7 @@ class MoviesController < ApplicationController
     #session.clear
     #byebug
     
-    session.delete(:ratings)
+    #session.delete(:ratings)
     
     #session[:rating] = session[:ratings] || {'G'=>'1','PG-13'=>'1','PG'=>'1','R'=>'1'}
     
